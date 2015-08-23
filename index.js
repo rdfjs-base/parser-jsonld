@@ -213,30 +213,6 @@ var JsonLdParser = function (rdf, options) {
       });
     });
   };
-
-  this.parse = function (data, callback, base, filter, graph) {
-    graph = graph || rdf.createGraph();
-
-    var pushTriple = function (triple) {
-      graph.add(triple);
-    };
-
-    return new Promise(function (resolve, reject) {
-      self.process(data, pushTriple, base, filter, function (error) {
-        // callback API
-        if (callback) {
-          callback(graph);
-        }
-
-        // Promise API
-        if (error) {
-          reject(error);
-        } else {
-          resolve(graph);
-        }
-      });
-    });
-  };
 };
 
 
