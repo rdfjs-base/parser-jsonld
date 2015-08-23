@@ -6,8 +6,6 @@ var
 var JsonLdParser = function (rdf, options) {
   AbstractParser.call(this);
 
-  var self = this;
-
   options = options || {};
 
   if (!('importPrefixMap' in options)) {
