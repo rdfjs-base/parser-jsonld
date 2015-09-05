@@ -4,7 +4,7 @@
   "description": "JSON-LD parser that follows the RDF Interface specification",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha"
+    "test": "standard && node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",
