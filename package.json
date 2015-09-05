@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "mocha": "^2.2.5",
+    "rdf-ext": "^0.3.0",
     "rdf-test-data": "^0.1.0",
     "rdf-test-utils": "^0.2.0"
   }
