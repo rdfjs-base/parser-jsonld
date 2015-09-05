@@ -1,7 +1,8 @@
 var jsonld = require('jsonld')
+var rdf = require('rdf-ext')()
 var AbstractParser = require('rdf-parser-abstract')
 
-var JsonLdParser = function (rdf, options) {
+var JsonLdParser = function (options) {
   AbstractParser.call(this, rdf)
 
   options = options || {}
@@ -206,6 +207,13 @@ var JsonLdParser = function (rdf, options) {
       })
     })
   }
+}
+
+// add singleton methods to class
+var instance = new JsonLdParser()
+
+for (var property in instance) {
+  JsonLdParser[property] = instance[property]
 }
 
 module.exports = JsonLdParser

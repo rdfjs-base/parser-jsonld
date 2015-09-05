@@ -4,175 +4,336 @@ var assert = require('assert')
 var rdf = require('rdf-ext')()
 var testData = require('rdf-test-data')(rdf)
 var testUtils = require('rdf-test-utils')(rdf)
-var JsonLdParser = require('../').bind(null, rdf)
+var JsonLdParser = require('../')
 
 describe('JSON-LD parser', function () {
-  describe('process API', function () {
-    it('should be supported', function (done) {
-      var parser = new JsonLdParser()
-      var counter = 0
+  describe('instance API', function () {
+    describe('process', function () {
+      it('should be supported', function (done) {
+        var parser = new JsonLdParser()
+        var counter = 0
 
-      parser.process({
-        '@id': 'http://example.org/subject',
-        'http://example.org/predicate': 'object'
-      }, function () {
-        counter++
-      }).then(function () {
-        if (counter !== 1) {
-          done('no triple processed')
-        } else {
-          done()
-        }
-      }).catch(function (error) {
-        done(error)
-      })
-    })
-
-    it('should use base parameter', function (done) {
-      var parser = new JsonLdParser()
-      var counter = 0
-
-      parser.process({
-        '@id': 'subject',
-        'http://example.org/predicate': 'object'
-      }, function (triple) {
-        if (triple.subject.toString() === 'http://example.org/subject') {
-          counter++
-        }
-      }, 'http://example.org/').then(function () {
-        if (counter !== 1) {
-          done('no triple processed')
-        } else {
-          done()
-        }
-      }).catch(function (error) {
-        done(error)
-      })
-    })
-
-    it('should use filter parameter', function (done) {
-      var parser = new JsonLdParser()
-      var counter = 1
-
-      parser.process({
-        '@id': 'http://example.org/subject',
-        'http://example.org/predicate': 'object'
-      }, function () {
-        counter *= 2
-      }, null, function () {
-        counter *= 3
-
-        return false
-      }).then(function () {
-        if (counter !== 3) {
-          done('no triple processed')
-        } else {
-          done()
-        }
-      }).catch(function (error) {
-        done(error)
-      })
-    })
-
-    it('should use done parameter', function (done) {
-      var parser = new JsonLdParser()
-      var counter = 0
-
-      Promise.resolve(new Promise(function (resolve) {
         parser.process({
           '@id': 'http://example.org/subject',
           'http://example.org/predicate': 'object'
         }, function () {
           counter++
-        }, null, null, function () {
-          resolve()
-        })
-      })).then(function () {
-        if (counter !== 1) {
-          done('no triple processed')
-        } else {
-          done()
-        }
-      }).catch(function (error) {
-        done(error)
-      })
-    })
-  })
-
-  describe('callback API', function () {
-    it('should be supported', function (done) {
-      var parser = new JsonLdParser()
-
-      Promise.resolve(new Promise(function (resolve) {
-        parser.parse({}, function () {
-          resolve()
-        })
-      })).then(function () {
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
-    })
-
-    it('should forward errors', function (done) {
-      var parser = new JsonLdParser()
-
-      Promise.resolve(new Promise(function (resolve, reject) {
-        parser.parse('{"@context": "urn:test"}', function (error) {
-          if (error) {
-            reject(error)
+        }).then(function () {
+          if (counter !== 1) {
+            done('no triple processed')
           } else {
-            resolve()
+            done()
           }
+        }).catch(function (error) {
+          done(error)
         })
-      })).then(function () {
-        done('no error thrown')
-      }).catch(function () {
-        done()
+      })
+
+      it('should use base parameter', function (done) {
+        var parser = new JsonLdParser()
+        var counter = 0
+
+        parser.process({
+          '@id': 'subject',
+          'http://example.org/predicate': 'object'
+        }, function (triple) {
+          if (triple.subject.toString() === 'http://example.org/subject') {
+            counter++
+          }
+        }, 'http://example.org/').then(function () {
+          if (counter !== 1) {
+            done('no triple processed')
+          } else {
+            done()
+          }
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should use filter parameter', function (done) {
+        var parser = new JsonLdParser()
+        var counter = 1
+
+        parser.process({
+          '@id': 'http://example.org/subject',
+          'http://example.org/predicate': 'object'
+        }, function () {
+          counter *= 2
+        }, null, function () {
+          counter *= 3
+
+          return false
+        }).then(function () {
+          if (counter !== 3) {
+            done('no triple processed')
+          } else {
+            done()
+          }
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should use done parameter', function (done) {
+        var parser = new JsonLdParser()
+        var counter = 0
+
+        Promise.resolve(new Promise(function (resolve) {
+          parser.process({
+            '@id': 'http://example.org/subject',
+            'http://example.org/predicate': 'object'
+          }, function () {
+            counter++
+          }, null, null, function () {
+            resolve()
+          })
+        })).then(function () {
+          if (counter !== 1) {
+            done('no triple processed')
+          } else {
+            done()
+          }
+        }).catch(function (error) {
+          done(error)
+        })
       })
     })
-  })
 
-  describe('Promise API', function () {
-    it('should be supported', function (done) {
-      var parser = new JsonLdParser()
+    describe('callback', function () {
+      it('should be supported', function (done) {
+        var parser = new JsonLdParser()
 
-      parser.parse({}).then(function () {
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
-    })
-
-    it('should forward error to Promise API', function (done) {
-      var parser = new JsonLdParser()
-
-      parser.parse('{"@context": "urn:test"}').then(function () {
-        done('no error thrown')
-      }).catch(function () {
-        done()
-      })
-    })
-  })
-
-  describe('Stream API', function () {
-    it('should be supported', function (done) {
-      var parser = new JsonLdParser()
-      var counter = 0
-
-      parser.stream({
-        '@id': 'http://example.org/subject',
-        'http://example.org/predicate': 'object'
-      }).on('data', function () {
-        counter++
-      }).on('end', function () {
-        if (counter !== 1) {
-          done('no triple streamed')
-        } else {
+        Promise.resolve(new Promise(function (resolve) {
+          parser.parse({}, function () {
+            resolve()
+          })
+        })).then(function () {
           done()
-        }
-      }).on('error', function (error) {
-        done(error)
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should forward errors', function (done) {
+        var parser = new JsonLdParser()
+
+        Promise.resolve(new Promise(function (resolve, reject) {
+          parser.parse('{"@context": "urn:test"}', function (error) {
+            if (error) {
+              reject(error)
+            } else {
+              resolve()
+            }
+          })
+        })).then(function () {
+          done('no error thrown')
+        }).catch(function () {
+          done()
+        })
+      })
+    })
+
+    describe('Promise', function () {
+      it('should be supported', function (done) {
+        var parser = new JsonLdParser()
+
+        parser.parse({}).then(function () {
+          done()
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should forward error to Promise API', function (done) {
+        var parser = new JsonLdParser()
+
+        parser.parse('{"@context": "urn:test"}').then(function () {
+          done('no error thrown')
+        }).catch(function () {
+          done()
+        })
+      })
+    })
+
+    describe('Stream', function () {
+      it('should be supported', function (done) {
+        var parser = new JsonLdParser()
+        var counter = 0
+
+        parser.stream({
+          '@id': 'http://example.org/subject',
+          'http://example.org/predicate': 'object'
+        }).on('data', function () {
+          counter++
+        }).on('end', function () {
+          if (counter !== 1) {
+            done('no triple streamed')
+          } else {
+            done()
+          }
+        }).on('error', function (error) {
+          done(error)
+        })
+      })
+    })
+  })
+
+  describe('static API', function () {
+    describe('process', function () {
+      it('should be supported', function (done) {
+        var counter = 0
+
+        JsonLdParser.process({
+          '@id': 'http://example.org/subject',
+          'http://example.org/predicate': 'object'
+        }, function () {
+          counter++
+        }).then(function () {
+          if (counter !== 1) {
+            done('no triple processed')
+          } else {
+            done()
+          }
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should use base parameter', function (done) {
+        var counter = 0
+
+        JsonLdParser.process({
+          '@id': 'subject',
+          'http://example.org/predicate': 'object'
+        }, function (triple) {
+          if (triple.subject.toString() === 'http://example.org/subject') {
+            counter++
+          }
+        }, 'http://example.org/').then(function () {
+          if (counter !== 1) {
+            done('no triple processed')
+          } else {
+            done()
+          }
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should use filter parameter', function (done) {
+        var counter = 1
+
+        JsonLdParser.process({
+          '@id': 'http://example.org/subject',
+          'http://example.org/predicate': 'object'
+        }, function () {
+          counter *= 2
+        }, null, function () {
+          counter *= 3
+
+          return false
+        }).then(function () {
+          if (counter !== 3) {
+            done('no triple processed')
+          } else {
+            done()
+          }
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should use done parameter', function (done) {
+        var counter = 0
+
+        Promise.resolve(new Promise(function (resolve) {
+          JsonLdParser.process({
+            '@id': 'http://example.org/subject',
+            'http://example.org/predicate': 'object'
+          }, function () {
+            counter++
+          }, null, null, function () {
+            resolve()
+          })
+        })).then(function () {
+          if (counter !== 1) {
+            done('no triple processed')
+          } else {
+            done()
+          }
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+    })
+
+    describe('callback', function () {
+      it('should be supported', function (done) {
+        Promise.resolve(new Promise(function (resolve) {
+          JsonLdParser.parse({}, function () {
+            resolve()
+          })
+        })).then(function () {
+          done()
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should forward errors', function (done) {
+        Promise.resolve(new Promise(function (resolve, reject) {
+          JsonLdParser.parse('{"@context": "urn:test"}', function (error) {
+            if (error) {
+              reject(error)
+            } else {
+              resolve()
+            }
+          })
+        })).then(function () {
+          done('no error thrown')
+        }).catch(function () {
+          done()
+        })
+      })
+    })
+
+    describe('Promise', function () {
+      it('should be supported', function (done) {
+        JsonLdParser.parse({}).then(function () {
+          done()
+        }).catch(function (error) {
+          done(error)
+        })
+      })
+
+      it('should forward error to Promise API', function (done) {
+        JsonLdParser.parse('{"@context": "urn:test"}').then(function () {
+          done('no error thrown')
+        }).catch(function () {
+          done()
+        })
+      })
+    })
+
+    describe('Stream', function () {
+      it('should be supported', function (done) {
+        var counter = 0
+
+        JsonLdParser.stream({
+          '@id': 'http://example.org/subject',
+          'http://example.org/predicate': 'object'
+        }).on('data', function () {
+          counter++
+        }).on('end', function () {
+          if (counter !== 1) {
+            done('no triple streamed')
+          } else {
+            done()
+          }
+        }).on('error', function (error) {
+          done(error)
+        })
       })
     })
   })

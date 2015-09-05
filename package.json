@@ -24,11 +24,11 @@
   "homepage": "https://github.com/rdf-ext/rdf-parser-jsonld",
   "dependencies": {
     "jsonld": "^0.3.24",
+    "rdf-ext": "^0.3.0",
     "rdf-parser-abstract": "^0.1.0"
   },
   "devDependencies": {
     "mocha": "^2.2.5",
-    "rdf-ext": "^0.3.0",
     "rdf-test-data": "^0.1.0",
     "rdf-test-utils": "^0.2.0"
   }
