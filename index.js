@@ -1,5 +1,5 @@
 var jsonld = require('jsonld')
-var rdf = require('rdf-ext')()
+var rdf = require('rdf-ext')
 var util = require('util')
 var AbstractParser = require('rdf-parser-abstract')
 
