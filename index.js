@@ -130,7 +130,7 @@ var JsonLdParser = function (options) {
 
       var processObject = function (jsonObject) {
         // is it a simple literal?
-        if (typeof jsonObject === 'string') {
+        if (typeof jsonObject === 'string' || typeof jsonObject === 'number') {
           return rdf.createLiteral(jsonObject)
         }
 

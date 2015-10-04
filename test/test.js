@@ -388,6 +388,19 @@ describe('JSON-LD parser', function () {
         done(error)
       })
     })
+
+    it('should support numbers in literals', function (done) {
+      var example = '{"http://example.org/predicate": 50}'
+      var parser = new JsonLdParser()
+
+      parser.parse(example).then(function (graph) {
+        assert.equal(graph.toArray().shift().object.nominalValue, 50)
+
+        done()
+      }).catch(function (error) {
+        done(error)
+      })
+    })
   })
 })
 
