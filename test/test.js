@@ -36,7 +36,7 @@ describe('JSON-LD parser', function () {
           '@id': 'subject',
           'http://example.org/predicate': 'object'
         }, function (triple) {
-          if (triple.subject.toString() === 'http://example.org/subject') {
+          if (triple.subject.equals('http://example.org/subject')) {
             counter++
           }
         }, 'http://example.org/').then(function () {
@@ -206,7 +206,7 @@ describe('JSON-LD parser', function () {
           '@id': 'subject',
           'http://example.org/predicate': 'object'
         }, function (triple) {
-          if (triple.subject.toString() === 'http://example.org/subject') {
+          if (triple.subject.equals('http://example.org/subject')) {
             counter++
           }
         }, 'http://example.org/').then(function () {
