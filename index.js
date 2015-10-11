@@ -104,7 +104,7 @@ var JsonLdParser = function (options) {
         types.forEach(function (type) {
           pushTriple(
             getNode(subject),
-            getNode(rdf.ns.type),
+            getNode(rdf.resolve('rdf:type')),
             getNode(type))
         })
 
