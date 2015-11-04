@@ -341,11 +341,11 @@ describe('JSON-LD parser', function () {
     it('card.json should be parsed', function (done) {
       var parser = new JsonLdParser()
 
-      testUtils.p.readFile('support/card.json', __dirname).then(function (card) {
+      testUtils.readFile('support/card.json', __dirname).then(function (card) {
         return parser.parse(card, null, 'https://www.example.com/john/card')
       }).then(function (graph) {
-        return testUtils.p.assertGraphEqual(graph, testData.cardGraph)
-      }).then(function () {
+        assert(testData.cardGraph.equals(graph))
+
         done()
       }).catch(function (error) {
         done(error)
@@ -363,7 +363,7 @@ describe('JSON-LD parser', function () {
         delete rdf.prefixes.foaf
       }
 
-      testUtils.p.readFile('support/card.json', __dirname).then(function (card) {
+      testUtils.readFile('support/card.json', __dirname).then(function (card) {
         return parser.parse(card, null, 'https://www.example.com/john/card')
       }).then(function () {
         assert.equal(rdf.prefixes.cert, 'http://www.w3.org/ns/auth/cert#')
@@ -378,11 +378,11 @@ describe('JSON-LD parser', function () {
     it('list.json should be parsed', function (done) {
       var parser = new JsonLdParser()
 
-      testUtils.p.readFile('support/list.json', __dirname).then(function (list) {
+      testUtils.readFile('support/list.json', __dirname).then(function (list) {
         return parser.parse(list, null, 'https://www.example.com/list')
       }).then(function (graph) {
-        return testUtils.p.assertGraphEqual(graph, testData.listGraph)
-      }).then(function () {
+        assert(testData.listGraph.equals(graph))
+
         done()
       }).catch(function (error) {
         done(error)
