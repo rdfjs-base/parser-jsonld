@@ -1,6 +1,6 @@
 {
   "name": "rdf-parser-jsonld",
-  "version": "0.3.0-rc1",
+  "version": "0.3.0-rc2",
   "description": "JSON-LD parser that follows the RDF Interface specification",
   "main": "index.js",
   "scripts": {
