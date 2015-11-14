@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/rdf-ext/rdf-parser-jsonld",
   "dependencies": {
-    "jsonld": "^0.3.24",
+    "jsonld": "^0.4.2",
     "rdf-ext": "^0.3.0-rc1",
     "rdf-parser-abstract": "^0.3.0-rc1"
   },
