@@ -130,8 +130,18 @@ var JsonLdParser = function (options) {
 
       var processObject = function (jsonObject) {
         // is it a simple literal?
-        if (typeof jsonObject === 'string' || typeof jsonObject === 'number') {
-          return rdf.createLiteral(jsonObject)
+        if (typeof jsonObject !== 'object') {
+          if (typeof jsonObject === 'boolean') {
+            return rdf.createLiteral(jsonObject, null, rdf.createNamedNode('http://www.w3.org/2001/XMLSchema#boolean'))
+          } else if (typeof jsonObject === 'number') {
+            if (String(jsonObject).indexOf('.') !== -1) {
+              return rdf.createLiteral(jsonObject.toString(), null, rdf.createNamedNode('http://www.w3.org/2001/XMLSchema#double'))
+            } else {
+              return rdf.createLiteral(jsonObject.toString(), null, rdf.createNamedNode('http://www.w3.org/2001/XMLSchema#integer'))
+            }
+          } else {
+            return rdf.createLiteral(jsonObject.toString())
+          }
         }
 
         // or blank node / named node

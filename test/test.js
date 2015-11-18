@@ -389,12 +389,47 @@ describe('JSON-LD parser', function () {
       })
     })
 
-    it('should support numbers in literals', function (done) {
+    it('should support integer numbers in literals', function (done) {
       var example = '{"http://example.org/predicate": 50}'
       var parser = new JsonLdParser()
 
       parser.parse(example).then(function (graph) {
-        assert.equal(graph.toArray().shift().object.nominalValue, 50)
+        var object = graph.toArray().shift().object
+
+        assert.equal(object.nominalValue, 50)
+        assert.equal(object.datatype.toString(), 'http://www.w3.org/2001/XMLSchema#integer')
+
+        done()
+      }).catch(function (error) {
+        done(error)
+      })
+    })
+
+    it('should support float numbers in literals', function (done) {
+      var example = '{"http://example.org/predicate": 50.5}'
+      var parser = new JsonLdParser()
+
+      parser.parse(example).then(function (graph) {
+        var object = graph.toArray().shift().object
+
+        assert.equal(object.nominalValue, 50.5)
+        assert.equal(object.datatype.toString(), 'http://www.w3.org/2001/XMLSchema#double')
+
+        done()
+      }).catch(function (error) {
+        done(error)
+      })
+    })
+
+    it('should support booleans in literals', function (done) {
+      var example = '{"http://example.org/predicate": true}'
+      var parser = new JsonLdParser()
+
+      parser.parse(example).then(function (graph) {
+        var object = graph.toArray().shift().object
+
+        assert.equal(object.nominalValue, true)
+        assert.equal(object.datatype.toString(), 'http://www.w3.org/2001/XMLSchema#boolean')
 
         done()
       }).catch(function (error) {
