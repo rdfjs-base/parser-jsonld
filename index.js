@@ -1,6 +1,6 @@
 var jsonld = require('jsonld')
 var rdf = require('rdf-ext')
-var util = require('util')
+var inherits = require('inherits')
 var AbstractParser = require('rdf-parser-abstract')
 
 var JsonLdParser = function (options) {
@@ -220,7 +220,7 @@ var JsonLdParser = function (options) {
   }
 }
 
-util.inherits(JsonLdParser, AbstractParser)
+inherits(JsonLdParser, AbstractParser)
 
 // add singleton methods to class
 var instance = new JsonLdParser()
