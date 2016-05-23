@@ -25,8 +25,6 @@ class JSONLDParser extends Source {
   constructor (input, options) {
     super()
 
-    this._readableState.objectMode = true
-
     options = options || {}
 
     let baseIRI = options.baseIRI || ''
@@ -81,3 +79,4 @@ class JSONLDParser extends Source {
 }
 
 module.exports = JSONLDParser
+    
