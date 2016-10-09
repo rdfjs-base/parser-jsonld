@@ -26,13 +26,24 @@
   "dependencies": {
     "concat-stream": "^1.5.1",
     "jsonld": "^0.4.11",
-    "rdf-data-model": "git://github.com/rdf-ext/rdf-data-model.git#v1",
-    "rdf-source": "git://github.com/rdf-ext/rdf-source.git#v1"
+    "rdf-data-model": "git://github.com/rdf-ext/rdf-data-model.git#develop",
+    "rdf-source": "git://github.com/rdf-ext/rdf-source.git#develop"
   },
   "devDependencies": {
     "mocha": "^2.4.5",
     "standard": "^7.0.1",
     "string-to-stream": "^1.1.0"
   },
-  "readmeFilename": "README.md"
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  }
 }
