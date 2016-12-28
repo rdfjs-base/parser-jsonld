@@ -206,6 +206,11 @@ var JsonLdParser = function (options) {
 
         if (jsonGraph) {
           jsonGraph.forEach(function (jsonSubject) {
+            // try @graph if the content contains quads
+            if (jsonSubject['@graph']) {
+              jsonSubject = jsonSubject['@graph'].shift()
+            }
+
             processSubject(jsonSubject)
           })
         }

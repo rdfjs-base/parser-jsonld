@@ -389,6 +389,20 @@ describe('JSON-LD parser', function () {
       })
     })
 
+    it('quad.json should be parsed', function (done) {
+      var parser = new JsonLdParser()
+
+      testUtils.readFile('support/quad.json', __dirname).then(function (list) {
+        return parser.parse(list, null, 'https://www.example.com/quad')
+      }).then(function (graph) {
+        assert.equal(graph.length, 2)
+
+        done()
+      }).catch(function (error) {
+        done(error)
+      })
+    })
+
     it('should support integer numbers in literals', function (done) {
       var example = '{"http://example.org/predicate": 50}'
       var parser = new JsonLdParser()

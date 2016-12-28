@@ -1,0 +1,17 @@
+{
+  "@context": {
+    "cert": "http://www.w3.org/ns/auth/cert#",
+    "foaf": "http://xmlns.com/foaf/0.1/"
+  },
+  "@graph": [
+    {
+      "@id": "#me",
+      "@type": "foaf:Person",
+      "foaf:name": {
+        "@language": "en",
+        "@value": "John Smith"
+      }
+    }
+  ],
+  "@id": "#graph"
+}
