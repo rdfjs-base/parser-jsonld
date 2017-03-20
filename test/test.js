@@ -22,7 +22,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -42,7 +42,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -61,7 +61,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -83,7 +83,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -103,7 +103,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -123,7 +123,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -144,7 +144,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -169,7 +169,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -194,7 +194,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -216,7 +216,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -238,7 +238,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -258,7 +258,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.match(null, null, rdf.literal('object1')).on('data', (triple) => {
@@ -279,7 +279,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser({baseIRI: 'http://example.org/'})
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
     let output = []
 
     stream.on('data', (triple) => {
@@ -295,7 +295,7 @@ describe('rdf-parser-jsond', () => {
 
   it('should throw an error if JSON is invalid', () => {
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream('{'))
+    let stream = parser.import(stringToStream('{'))
 
     stream.resume()
 
@@ -310,7 +310,7 @@ describe('rdf-parser-jsond', () => {
     }
 
     let parser = new JSONLDParser()
-    let stream = parser.read(stringToStream(JSON.stringify(example)))
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
 
     stream.resume()
 
