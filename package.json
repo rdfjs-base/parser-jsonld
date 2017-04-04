@@ -27,10 +27,12 @@
     "concat-stream": "^1.5.1",
     "jsonld": "^0.4.11",
     "rdf-data-model": "git://github.com/rdf-ext/rdf-data-model.git#develop",
+    "rdf-sink": "git://github.com/rdf-ext/rdf-sink.git#develop",
     "rdf-source": "git://github.com/rdf-ext/rdf-source.git#develop"
   },
   "devDependencies": {
     "mocha": "^3.2.0",
+    "rdf-ext": "git://github.com/rdf-ext/rdf-ext.git#develop",
     "standard": "^9.0.1",
     "string-to-stream": "^1.1.0"
   }

@@ -1,18 +1,9 @@
-'use strict'
-
 /* global describe, it */
 
 const assert = require('assert')
-const rdf = require('rdf-data-model')
+const rdf = require('rdf-ext')
 const stringToStream = require('string-to-stream')
 const JSONLDParser = require('..')
-
-function streamToPromise (stream) {
-  return new Promise((resolve, reject) => {
-    stream.on('end', resolve)
-    stream.on('error', reject)
-  })
-}
 
 describe('rdf-parser-jsond', () => {
   it('should support Named Node subjects', () => {
@@ -29,7 +20,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].subject.termType, 'NamedNode')
       assert.equal(output[0].subject.value, 'http://example.org/subject')
@@ -49,7 +40,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].subject.termType, 'BlankNode')
     })
@@ -68,7 +59,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].predicate.termType, 'NamedNode')
       assert.equal(output[0].predicate.value, 'http://example.org/predicate')
@@ -90,7 +81,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'NamedNode')
       assert.equal(output[0].object.value, 'http://example.org/object')
@@ -110,7 +101,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'BlankNode')
     })
@@ -130,7 +121,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 2)
       assert.equal(output[0].object.equals(output[1].object), true)
     })
@@ -151,7 +142,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'Literal')
       assert.equal(output[0].object.value, 'object')
@@ -176,7 +167,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'Literal')
       assert.equal(output[0].object.value, 'object')
@@ -201,7 +192,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'Literal')
       assert.equal(output[0].object.value, 'object')
@@ -223,7 +214,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].graph.termType, 'DefaultGraph')
     })
@@ -245,7 +236,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].graph.termType, 'NamedNode')
       assert.equal(output[0].graph.value, 'http://example.org/graph')
@@ -265,7 +256,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'Literal')
       assert.equal(output[0].object.value, 'object1')
@@ -286,7 +277,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return streamToPromise(stream).then(() => {
+    return rdf.waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].subject.termType, 'NamedNode')
       assert.equal(output[0].subject.value, 'http://example.org/subject')
@@ -300,7 +291,7 @@ describe('rdf-parser-jsond', () => {
     stream.resume()
 
     return new Promise((resolve, reject) => {
-      streamToPromise(stream).then(reject).catch(resolve)
+      rdf.waitFor(stream).then(reject).catch(resolve)
     })
   })
 
@@ -315,7 +306,7 @@ describe('rdf-parser-jsond', () => {
     stream.resume()
 
     return new Promise((resolve, reject) => {
-      streamToPromise(stream).then(reject).catch(resolve)
+      rdf.waitFor(stream).then(reject).catch(resolve)
     })
   })
 })
