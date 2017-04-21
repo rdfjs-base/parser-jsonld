@@ -243,26 +243,6 @@ describe('rdf-parser-jsond', () => {
     })
   })
 
-  it('should support .match', () => {
-    let example = {
-      'http://example.org/predicate': ['object1', 'object2']
-    }
-
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
-
-    stream.match(null, null, rdf.literal('object1')).on('data', (triple) => {
-      output.push(triple)
-    })
-
-    return rdf.waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].object.termType, 'Literal')
-      assert.equal(output[0].object.value, 'object1')
-    })
-  })
-
   it('should use baseIRI option', () => {
     let example = {
       '@id': 'subject',
