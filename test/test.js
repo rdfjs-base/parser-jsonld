@@ -289,4 +289,29 @@ describe('rdf-parser-jsond', () => {
       rdf.waitFor(stream).then(reject).catch(resolve)
     })
   })
+
+  it('should emit a prefix event for each context entry', () => {
+    const example = {
+      '@context': {
+        ex1: 'http://example.org/1',
+        ex2: 'http://example.org/2'
+      }
+    }
+
+    const prefixes = {}
+
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+
+    stream.on('prefix', (prefix, namespace) => {
+      prefixes[prefix] = namespace
+    })
+
+    stream.resume()
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(prefixes.ex1.value, 'http://example.org/1')
+      assert.equal(prefixes.ex2.value, 'http://example.org/2')
+    })
+  })
 })
