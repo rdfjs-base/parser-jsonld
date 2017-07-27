@@ -1,7 +1,6 @@
 # rdf-parser-jsonld
 
 [![Build Status](https://travis-ci.org/rdf-ext/rdf-parser-jsonld.svg?branch=master)](https://travis-ci.org/rdf-ext/rdf-parser-jsonld)
-[![NPM Version](https://img.shields.io/npm/v/rdf-parser-jsonld.svg?style=flat)](https://npm.im/rdf-parser-jsonld)
+[![npm version](https://badge.fury.io/js/rdf-parser-jsonld.svg)](https://badge.fury.io/js/rdf-parser-jsonld)
 
-JSON-LD parser that follows the RDF Interface specification using the standard JSON-LD library.
-The standard library is used for preprocessing. So any document form (expanded, compacted or flattened) is supported.
+JSON-LD parser that implements the [RDFJS Sink interface](https://github.com/rdfjs/representation-task-force/) using [jsonld.js](https://github.com/digitalbazaar/jsonld.js).

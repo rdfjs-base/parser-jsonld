@@ -1,455 +1,317 @@
 /* global describe, it */
-var assert = require('assert')
-var rdf = require('rdf-ext')
-var testData = require('rdf-test-data')
-var testUtils = require('rdf-test-utils')
-var JsonLdParser = require('../')
 
-describe('JSON-LD parser', function () {
-  describe('instance API', function () {
-    describe('process', function () {
-      it('should be supported', function (done) {
-        var parser = new JsonLdParser()
-        var counter = 0
+const assert = require('assert')
+const rdf = require('rdf-ext')
+const stringToStream = require('string-to-stream')
+const JSONLDParser = require('..')
 
-        parser.process({
-          '@id': 'http://example.org/subject',
-          'http://example.org/predicate': 'object'
-        }, function () {
-          counter++
-        }).then(function () {
-          if (counter !== 1) {
-            done('no triple processed')
-          } else {
-            done()
-          }
-        }).catch(function (error) {
-          done(error)
-        })
-      })
+describe('rdf-parser-jsond', () => {
+  it('should support Named Node subjects', () => {
+    let example = {
+      '@id': 'http://example.org/subject',
+      'http://example.org/predicate': 'object'
+    }
 
-      it('should use base parameter', function (done) {
-        var parser = new JsonLdParser()
-        var counter = 0
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
 
-        parser.process({
-          '@id': 'subject',
-          'http://example.org/predicate': 'object'
-        }, function (triple) {
-          if (triple.subject.equals('http://example.org/subject')) {
-            counter++
-          }
-        }, 'http://example.org/').then(function () {
-          if (counter !== 1) {
-            done('no triple processed')
-          } else {
-            done()
-          }
-        }).catch(function (error) {
-          done(error)
-        })
-      })
-
-      it('should use filter parameter', function (done) {
-        var parser = new JsonLdParser()
-        var counter = 1
-
-        parser.process({
-          '@id': 'http://example.org/subject',
-          'http://example.org/predicate': 'object'
-        }, function () {
-          counter *= 2
-        }, null, function () {
-          counter *= 3
-
-          return false
-        }).then(function () {
-          if (counter !== 3) {
-            done('no triple processed')
-          } else {
-            done()
-          }
-        }).catch(function (error) {
-          done(error)
-        })
-      })
-
-      it('should use done parameter', function (done) {
-        var parser = new JsonLdParser()
-        var counter = 0
-
-        Promise.resolve(new Promise(function (resolve) {
-          parser.process({
-            '@id': 'http://example.org/subject',
-            'http://example.org/predicate': 'object'
-          }, function () {
-            counter++
-          }, null, null, function () {
-            resolve()
-          })
-        })).then(function () {
-          if (counter !== 1) {
-            done('no triple processed')
-          } else {
-            done()
-          }
-        }).catch(function (error) {
-          done(error)
-        })
-      })
+    stream.on('data', (triple) => {
+      output.push(triple)
     })
 
-    describe('callback', function () {
-      it('should be supported', function (done) {
-        var parser = new JsonLdParser()
-
-        Promise.resolve(new Promise(function (resolve) {
-          parser.parse({}, function () {
-            resolve()
-          })
-        })).then(function () {
-          done()
-        }).catch(function (error) {
-          done(error)
-        })
-      })
-
-      it('should forward errors', function (done) {
-        var parser = new JsonLdParser()
-
-        Promise.resolve(new Promise(function (resolve, reject) {
-          parser.parse('{"@context": "urn:test"}', function (error) {
-            if (error) {
-              reject(error)
-            } else {
-              resolve()
-            }
-          })
-        })).then(function () {
-          done('no error thrown')
-        }).catch(function () {
-          done()
-        })
-      })
-    })
-
-    describe('Promise', function () {
-      it('should be supported', function (done) {
-        var parser = new JsonLdParser()
-
-        parser.parse({}).then(function () {
-          done()
-        }).catch(function (error) {
-          done(error)
-        })
-      })
-
-      it('should forward error to Promise API', function (done) {
-        var parser = new JsonLdParser()
-
-        parser.parse('{"@context": "urn:test"}').then(function () {
-          done('no error thrown')
-        }).catch(function () {
-          done()
-        })
-      })
-    })
-
-    describe('Stream', function () {
-      it('should be supported', function (done) {
-        var parser = new JsonLdParser()
-        var counter = 0
-
-        parser.stream({
-          '@id': 'http://example.org/subject',
-          'http://example.org/predicate': 'object'
-        }).on('data', function () {
-          counter++
-        }).on('end', function () {
-          if (counter !== 1) {
-            done('no triple streamed')
-          } else {
-            done()
-          }
-        }).on('error', function (error) {
-          done(error)
-        })
-      })
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].subject.termType, 'NamedNode')
+      assert.equal(output[0].subject.value, 'http://example.org/subject')
     })
   })
 
-  describe('static API', function () {
-    describe('process', function () {
-      it('should be supported', function (done) {
-        var counter = 0
+  it('should support Blank Node subjects', () => {
+    let example = {
+      'http://example.org/predicate': 'object'
+    }
 
-        JsonLdParser.process({
-          '@id': 'http://example.org/subject',
-          'http://example.org/predicate': 'object'
-        }, function () {
-          counter++
-        }).then(function () {
-          if (counter !== 1) {
-            done('no triple processed')
-          } else {
-            done()
-          }
-        }).catch(function (error) {
-          done(error)
-        })
-      })
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
 
-      it('should use base parameter', function (done) {
-        var counter = 0
-
-        JsonLdParser.process({
-          '@id': 'subject',
-          'http://example.org/predicate': 'object'
-        }, function (triple) {
-          if (triple.subject.equals('http://example.org/subject')) {
-            counter++
-          }
-        }, 'http://example.org/').then(function () {
-          if (counter !== 1) {
-            done('no triple processed')
-          } else {
-            done()
-          }
-        }).catch(function (error) {
-          done(error)
-        })
-      })
-
-      it('should use filter parameter', function (done) {
-        var counter = 1
-
-        JsonLdParser.process({
-          '@id': 'http://example.org/subject',
-          'http://example.org/predicate': 'object'
-        }, function () {
-          counter *= 2
-        }, null, function () {
-          counter *= 3
-
-          return false
-        }).then(function () {
-          if (counter !== 3) {
-            done('no triple processed')
-          } else {
-            done()
-          }
-        }).catch(function (error) {
-          done(error)
-        })
-      })
-
-      it('should use done parameter', function (done) {
-        var counter = 0
-
-        Promise.resolve(new Promise(function (resolve) {
-          JsonLdParser.process({
-            '@id': 'http://example.org/subject',
-            'http://example.org/predicate': 'object'
-          }, function () {
-            counter++
-          }, null, null, function () {
-            resolve()
-          })
-        })).then(function () {
-          if (counter !== 1) {
-            done('no triple processed')
-          } else {
-            done()
-          }
-        }).catch(function (error) {
-          done(error)
-        })
-      })
+    stream.on('data', (triple) => {
+      output.push(triple)
     })
 
-    describe('callback', function () {
-      it('should be supported', function (done) {
-        Promise.resolve(new Promise(function (resolve) {
-          JsonLdParser.parse({}, function () {
-            resolve()
-          })
-        })).then(function () {
-          done()
-        }).catch(function (error) {
-          done(error)
-        })
-      })
-
-      it('should forward errors', function (done) {
-        Promise.resolve(new Promise(function (resolve, reject) {
-          JsonLdParser.parse('{"@context": "urn:test"}', function (error) {
-            if (error) {
-              reject(error)
-            } else {
-              resolve()
-            }
-          })
-        })).then(function () {
-          done('no error thrown')
-        }).catch(function () {
-          done()
-        })
-      })
-    })
-
-    describe('Promise', function () {
-      it('should be supported', function (done) {
-        JsonLdParser.parse({}).then(function () {
-          done()
-        }).catch(function (error) {
-          done(error)
-        })
-      })
-
-      it('should forward error to Promise API', function (done) {
-        JsonLdParser.parse('{"@context": "urn:test"}').then(function () {
-          done('no error thrown')
-        }).catch(function () {
-          done()
-        })
-      })
-    })
-
-    describe('Stream', function () {
-      it('should be supported', function (done) {
-        var counter = 0
-
-        JsonLdParser.stream({
-          '@id': 'http://example.org/subject',
-          'http://example.org/predicate': 'object'
-        }).on('data', function () {
-          counter++
-        }).on('end', function () {
-          if (counter !== 1) {
-            done('no triple streamed')
-          } else {
-            done()
-          }
-        }).on('error', function (error) {
-          done(error)
-        })
-      })
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].subject.termType, 'BlankNode')
     })
   })
 
-  describe('example data', function () {
-    it('card.json should be parsed', function (done) {
-      var parser = new JsonLdParser()
+  it('should parse the predicate', () => {
+    let example = {
+      'http://example.org/predicate': 'object'
+    }
 
-      testUtils.readFile('support/card.json', __dirname).then(function (card) {
-        return parser.parse(card, null, 'https://www.example.com/john/card')
-      }).then(function (graph) {
-        assert(testData.cardGraph.equals(graph))
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
 
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
+    stream.on('data', (triple) => {
+      output.push(triple)
     })
 
-    it('card.json should feed prefix map', function (done) {
-      var parser = new JsonLdParser()
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].predicate.termType, 'NamedNode')
+      assert.equal(output[0].predicate.value, 'http://example.org/predicate')
+    })
+  })
 
-      if (rdf.prefixes.cert) {
-        delete rdf.prefixes.cert
+  it('should parse a Named Node object', () => {
+    let example = {
+      'http://example.org/predicate': {
+        '@id': 'http://example.org/object'
       }
+    }
 
-      if (rdf.prefixes.foaf) {
-        delete rdf.prefixes.foaf
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
+    })
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].object.termType, 'NamedNode')
+      assert.equal(output[0].object.value, 'http://example.org/object')
+    })
+  })
+
+  it('should parse a Blank Node object', () => {
+    let example = {
+      'http://example.org/predicate': {}
+    }
+
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
+    })
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].object.termType, 'BlankNode')
+    })
+  })
+
+  it('should keep Blank Node object mapping', () => {
+    let example = {
+      'http://example.org/predicate1': {'@id': '_:b0'},
+      'http://example.org/predicate2': {'@id': '_:b0'}
+    }
+
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
+    })
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 2)
+      assert.equal(output[0].object.equals(output[1].object), true)
+    })
+  })
+
+  it('should parse a Literal object', () => {
+    let example = {
+      'http://example.org/predicate': {
+        '@value': 'object'
       }
+    }
 
-      testUtils.readFile('support/card.json', __dirname).then(function (card) {
-        return parser.parse(card, null, 'https://www.example.com/john/card')
-      }).then(function () {
-        assert.equal(rdf.prefixes.cert, 'http://www.w3.org/ns/auth/cert#')
-        assert.equal(rdf.prefixes.foaf, 'http://xmlns.com/foaf/0.1/')
-      }).then(function () {
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
     })
 
-    it('list.json should be parsed', function (done) {
-      var parser = new JsonLdParser()
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].object.termType, 'Literal')
+      assert.equal(output[0].object.value, 'object')
+      assert.equal(output[0].object.language, '')
+      assert.equal(output[0].object.datatype.value, 'http://www.w3.org/2001/XMLSchema#string')
+    })
+  })
 
-      testUtils.readFile('support/list.json', __dirname).then(function (list) {
-        return parser.parse(list, null, 'https://www.example.com/list')
-      }).then(function (graph) {
-        assert(testData.listGraph.equals(graph))
+  it('should parse the language of a Literal object', () => {
+    let example = {
+      'http://example.org/predicate': {
+        '@value': 'object',
+        '@language': 'en'
+      }
+    }
 
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
     })
 
-    it('quad.json should be parsed', function (done) {
-      var parser = new JsonLdParser()
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].object.termType, 'Literal')
+      assert.equal(output[0].object.value, 'object')
+      assert.equal(output[0].object.language, 'en')
+      assert.equal(output[0].object.datatype.value, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString')
+    })
+  })
 
-      testUtils.readFile('support/quad.json', __dirname).then(function (list) {
-        return parser.parse(list, null, 'https://www.example.com/quad')
-      }).then(function (graph) {
-        assert.equal(graph.length, 2)
+  it('should parse the datatype of a Literal object', () => {
+    let example = {
+      'http://example.org/predicate': {
+        '@value': 'object',
+        '@type': 'http://example.org/datatype'
+      }
+    }
 
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
     })
 
-    it('should support integer numbers in literals', function (done) {
-      var example = '{"http://example.org/predicate": 50}'
-      var parser = new JsonLdParser()
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].object.termType, 'Literal')
+      assert.equal(output[0].object.value, 'object')
+      assert.equal(output[0].object.language, '')
+      assert.equal(output[0].object.datatype.value, 'http://example.org/datatype')
+    })
+  })
 
-      parser.parse(example).then(function (graph) {
-        var object = graph.toArray().shift().object
+  it('should use the default graph if none was given', () => {
+    let example = {
+      'http://example.org/predicate': 'object'
+    }
 
-        assert.equal(object.nominalValue, 50)
-        assert.equal(object.datatype.toString(), 'http://www.w3.org/2001/XMLSchema#integer')
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
 
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
+    stream.on('data', (triple) => {
+      output.push(triple)
     })
 
-    it('should support float numbers in literals', function (done) {
-      var example = '{"http://example.org/predicate": 50.5}'
-      var parser = new JsonLdParser()
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].graph.termType, 'DefaultGraph')
+    })
+  })
 
-      parser.parse(example).then(function (graph) {
-        var object = graph.toArray().shift().object
+  it('should parse graph', () => {
+    let example = {
+      '@id': 'http://example.org/graph',
+      '@graph': {
+        'http://example.org/predicate': 'object'
+      }
+    }
 
-        assert.equal(object.nominalValue, 50.5)
-        assert.equal(object.datatype.toString(), 'http://www.w3.org/2001/XMLSchema#double')
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
 
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
+    stream.on('data', (triple) => {
+      output.push(triple)
     })
 
-    it('should support booleans in literals', function (done) {
-      var example = '{"http://example.org/predicate": true}'
-      var parser = new JsonLdParser()
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].graph.termType, 'NamedNode')
+      assert.equal(output[0].graph.value, 'http://example.org/graph')
+    })
+  })
 
-      parser.parse(example).then(function (graph) {
-        var object = graph.toArray().shift().object
+  it('should use baseIRI option', () => {
+    let example = {
+      '@id': 'subject',
+      'http://example.org/predicate': 'object'
+    }
 
-        assert.equal(object.nominalValue, true)
-        assert.equal(object.datatype.toString(), 'http://www.w3.org/2001/XMLSchema#boolean')
+    let parser = new JSONLDParser({baseIRI: 'http://example.org/'})
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    let output = []
 
-        done()
-      }).catch(function (error) {
-        done(error)
-      })
+    stream.on('data', (triple) => {
+      output.push(triple)
+    })
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].subject.termType, 'NamedNode')
+      assert.equal(output[0].subject.value, 'http://example.org/subject')
+    })
+  })
+
+  it('should throw an error if JSON is invalid', () => {
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream('{'))
+
+    stream.resume()
+
+    return new Promise((resolve, reject) => {
+      rdf.waitFor(stream).then(reject).catch(resolve)
+    })
+  })
+
+  it('should throw an error if JSON-LD is invalid', () => {
+    let example = {
+      '@context': 'object'
+    }
+
+    let parser = new JSONLDParser()
+    let stream = parser.import(stringToStream(JSON.stringify(example)))
+
+    stream.resume()
+
+    return new Promise((resolve, reject) => {
+      rdf.waitFor(stream).then(reject).catch(resolve)
+    })
+  })
+
+  it('should emit a prefix event for each context entry', () => {
+    const example = {
+      '@context': {
+        ex1: 'http://example.org/1',
+        ex2: 'http://example.org/2'
+      }
+    }
+
+    const prefixes = {}
+
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+
+    stream.on('prefix', (prefix, namespace) => {
+      prefixes[prefix] = namespace
+    })
+
+    stream.resume()
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(prefixes.ex1.value, 'http://example.org/1')
+      assert.equal(prefixes.ex2.value, 'http://example.org/2')
     })
   })
 })
-
