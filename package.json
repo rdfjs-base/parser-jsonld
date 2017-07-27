@@ -1,11 +1,10 @@
 {
   "name": "rdf-parser-jsonld",
   "version": "0.9.0",
-  "description": "RDFJS Source Interface wrapper for jsonld.js",
+  "description": "JSON-LD parser that implements the RDFJS Sink interface using jsonld.js",
   "main": "index.js",
   "scripts": {
-    "lint": "standard",
-    "test": "npm run lint && mocha"
+    "test": "standard && mocha"
   },
   "repository": {
     "type": "git",
@@ -13,7 +12,9 @@
   },
   "keywords": [
     "rdf",
+    "rdfjs",
     "rdf-ext",
+    "parser",
     "jsonld",
     "stream"
   ],
@@ -26,13 +27,13 @@
   "dependencies": {
     "concat-stream": "^1.5.1",
     "jsonld": "^0.4.11",
-    "rdf-data-model": "git://github.com/rdf-ext/rdf-data-model.git#develop",
-    "rdf-sink": "git://github.com/rdf-ext/rdf-sink.git#develop",
+    "rdf-data-model": "^1.0.0",
+    "rdf-sink": "^1.0.0",
     "readable-stream": "^2.2.9"
   },
   "devDependencies": {
     "mocha": "^3.2.0",
-    "rdf-ext": "git://github.com/rdf-ext/rdf-ext.git#develop",
+    "rdf-ext": "^1.0.0",
     "standard": "^9.0.1",
     "string-to-stream": "^1.1.0"
   }
