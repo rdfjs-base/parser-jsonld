@@ -4,6 +4,7 @@ const assert = require('assert')
 const rdf = require('rdf-ext')
 const stringToStream = require('string-to-stream')
 const JSONLDParser = require('..')
+const Readable = require('readable-stream')
 
 describe('rdf-parser-jsond', () => {
   it('should support Named Node subjects', () => {
@@ -312,6 +313,72 @@ describe('rdf-parser-jsond', () => {
     return rdf.waitFor(stream).then(() => {
       assert.equal(prefixes.ex1.value, 'http://example.org/1')
       assert.equal(prefixes.ex2.value, 'http://example.org/2')
+    })
+  })
+
+  it('should register the error handler only once', () => {
+    let count = 0
+
+    const input = new Readable({
+      read: () => {}
+    })
+
+    input._on = input.on
+
+    input.on = (event, param) => {
+      if (event === 'error') {
+        count++
+      }
+
+      input._on(event, param)
+    }
+
+    const parser = new JSONLDParser()
+    const stream = parser.import(input)
+
+    stream.resume()
+
+    input.push('{')
+    input.push('"http://example.org/predicateA": "0",')
+    input.push('"http://example.org/predicateB": "0"')
+    input.push('}')
+    input.push(null)
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(count, 2) // +1 for waitFor
+    })
+  })
+
+  it('should register the data handler only once', () => {
+    let count = 0
+
+    const input = new Readable({
+      read: () => {}
+    })
+
+    input._on = input.on
+
+    input.on = (event, param) => {
+      if (event === 'data') {
+        count++
+      }
+
+      input._on(event, param)
+    }
+
+    const parser = new JSONLDParser()
+    const stream = parser.import(input)
+
+    stream.resume()
+
+    input.push('{')
+    input.push('"http://example.org/predicateA": "0",')
+    input.push('"http://example.org/predicateB": "0"')
+    input.push('}')
+    input.push(null)
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(count, 1)
     })
   })
 })
