@@ -1,6 +1,6 @@
 {
   "name": "rdf-parser-jsonld",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JSON-LD parser that implements the RDFJS Sink interface using jsonld.js",
   "main": "index.js",
   "scripts": {
