@@ -265,6 +265,34 @@ describe('rdf-parser-jsond', () => {
     })
   })
 
+  it('should use context option', () => {
+    const example = {
+      '@id': 'subject',
+      'predicate': 'object'
+    }
+
+    const context = {
+      '@vocab': 'http://example.org/'
+    }
+
+    const parser = new JSONLDParser({
+      baseIRI: 'http://example.org/',
+      context: context
+    })
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
+    })
+
+    return rdf.waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(output[0].subject.termType, 'NamedNode')
+      assert.equal(output[0].subject.value, 'http://example.org/subject')
+    })
+  })
+
   it('should throw an error if JSON is invalid', () => {
     let parser = new JSONLDParser()
     let stream = parser.import(stringToStream('{'))
