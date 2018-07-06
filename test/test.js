@@ -1,27 +1,33 @@
 /* global describe, it */
 
 const assert = require('assert')
-const rdf = require('rdf-ext')
 const stringToStream = require('string-to-stream')
 const JSONLDParser = require('..')
 const Readable = require('readable-stream')
 
+function waitFor (stream) {
+  return new Promise((resolve, reject) => {
+    stream.on('end', resolve)
+    stream.on('error', reject)
+  })
+}
+
 describe('rdf-parser-jsond', () => {
   it('should support Named Node subjects', () => {
-    let example = {
+    const example = {
       '@id': 'http://example.org/subject',
       'http://example.org/predicate': 'object'
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].subject.termType, 'NamedNode')
       assert.equal(output[0].subject.value, 'http://example.org/subject')
@@ -29,38 +35,38 @@ describe('rdf-parser-jsond', () => {
   })
 
   it('should support Blank Node subjects', () => {
-    let example = {
+    const example = {
       'http://example.org/predicate': 'object'
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].subject.termType, 'BlankNode')
     })
   })
 
   it('should parse the predicate', () => {
-    let example = {
+    const example = {
       'http://example.org/predicate': 'object'
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].predicate.termType, 'NamedNode')
       assert.equal(output[0].predicate.value, 'http://example.org/predicate')
@@ -68,21 +74,21 @@ describe('rdf-parser-jsond', () => {
   })
 
   it('should parse a Named Node object', () => {
-    let example = {
+    const example = {
       'http://example.org/predicate': {
         '@id': 'http://example.org/object'
       }
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'NamedNode')
       assert.equal(output[0].object.value, 'http://example.org/object')
@@ -90,60 +96,60 @@ describe('rdf-parser-jsond', () => {
   })
 
   it('should parse a Blank Node object', () => {
-    let example = {
+    const example = {
       'http://example.org/predicate': {}
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'BlankNode')
     })
   })
 
   it('should keep Blank Node object mapping', () => {
-    let example = {
+    const example = {
       'http://example.org/predicate1': {'@id': '_:b0'},
       'http://example.org/predicate2': {'@id': '_:b0'}
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 2)
       assert.equal(output[0].object.equals(output[1].object), true)
     })
   })
 
   it('should parse a Literal object', () => {
-    let example = {
+    const example = {
       'http://example.org/predicate': {
         '@value': 'object'
       }
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'Literal')
       assert.equal(output[0].object.value, 'object')
@@ -153,22 +159,22 @@ describe('rdf-parser-jsond', () => {
   })
 
   it('should parse the language of a Literal object', () => {
-    let example = {
+    const example = {
       'http://example.org/predicate': {
         '@value': 'object',
         '@language': 'en'
       }
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'Literal')
       assert.equal(output[0].object.value, 'object')
@@ -178,22 +184,22 @@ describe('rdf-parser-jsond', () => {
   })
 
   it('should parse the datatype of a Literal object', () => {
-    let example = {
+    const example = {
       'http://example.org/predicate': {
         '@value': 'object',
         '@type': 'http://example.org/datatype'
       }
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'Literal')
       assert.equal(output[0].object.value, 'object')
@@ -202,42 +208,64 @@ describe('rdf-parser-jsond', () => {
     })
   })
 
-  it('should use the default graph if none was given', () => {
-    let example = {
-      'http://example.org/predicate': 'object'
+  it('should parse the datatype of a Literal object into a full featured Literal', () => {
+    const example = {
+      'http://example.org/predicate': {
+        '@value': 'object',
+        '@type': 'http://example.org/datatype'
+      }
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
+      assert.equal(output.length, 1)
+      assert.equal(typeof output[0].object.datatype.equals, 'function')
+    })
+  })
+
+  it('should use the default graph if none was given', () => {
+    const example = {
+      'http://example.org/predicate': 'object'
+    }
+
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
+    })
+
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].graph.termType, 'DefaultGraph')
     })
   })
 
   it('should parse graph', () => {
-    let example = {
+    const example = {
       '@id': 'http://example.org/graph',
       '@graph': {
         'http://example.org/predicate': 'object'
       }
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].graph.termType, 'NamedNode')
       assert.equal(output[0].graph.value, 'http://example.org/graph')
@@ -245,20 +273,20 @@ describe('rdf-parser-jsond', () => {
   })
 
   it('should use baseIRI option', () => {
-    let example = {
+    const example = {
       '@id': 'subject',
       'http://example.org/predicate': 'object'
     }
 
-    let parser = new JSONLDParser({baseIRI: 'http://example.org/'})
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
-    let output = []
+    const parser = new JSONLDParser({baseIRI: 'http://example.org/'})
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
 
     stream.on('data', (triple) => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].subject.termType, 'NamedNode')
       assert.equal(output[0].subject.value, 'http://example.org/subject')
@@ -286,7 +314,7 @@ describe('rdf-parser-jsond', () => {
       output.push(triple)
     })
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].subject.termType, 'NamedNode')
       assert.equal(output[0].subject.value, 'http://example.org/subject')
@@ -294,28 +322,28 @@ describe('rdf-parser-jsond', () => {
   })
 
   it('should throw an error if JSON is invalid', () => {
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream('{'))
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream('{'))
 
     stream.resume()
 
     return new Promise((resolve, reject) => {
-      rdf.waitFor(stream).then(reject).catch(resolve)
+      waitFor(stream).then(reject).catch(resolve)
     })
   })
 
   it('should throw an error if JSON-LD is invalid', () => {
-    let example = {
+    const example = {
       '@context': 'object'
     }
 
-    let parser = new JSONLDParser()
-    let stream = parser.import(stringToStream(JSON.stringify(example)))
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
 
     stream.resume()
 
     return new Promise((resolve, reject) => {
-      rdf.waitFor(stream).then(reject).catch(resolve)
+      waitFor(stream).then(reject).catch(resolve)
     })
   })
 
@@ -338,7 +366,7 @@ describe('rdf-parser-jsond', () => {
 
     stream.resume()
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(prefixes.ex1.value, 'http://example.org/1')
       assert.equal(prefixes.ex2.value, 'http://example.org/2')
     })
@@ -372,7 +400,7 @@ describe('rdf-parser-jsond', () => {
     input.push('}')
     input.push(null)
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(count, 2) // +1 for waitFor
     })
   })
@@ -405,7 +433,7 @@ describe('rdf-parser-jsond', () => {
     input.push('}')
     input.push(null)
 
-    return rdf.waitFor(stream).then(() => {
+    return waitFor(stream).then(() => {
       assert.equal(count, 1)
     })
   })
