@@ -1,13 +1,9 @@
 const ParserStream = require('./lib/ParserStream')
-const Sink = require('rdf-sink')
+const Sink = require('@rdfjs/sink')
 
 class Parser extends Sink {
   constructor (options) {
     super(ParserStream, options)
-  }
-
-  static import (input, options) {
-    return new ParserStream(input, options)
   }
 }
 

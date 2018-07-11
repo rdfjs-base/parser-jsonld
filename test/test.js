@@ -1,6 +1,7 @@
 /* global describe, it */
 
 const assert = require('assert')
+const sinkTest = require('@rdfjs/sink/test')
 const stringToStream = require('string-to-stream')
 const JSONLDParser = require('..')
 const Readable = require('readable-stream')
@@ -12,7 +13,9 @@ function waitFor (stream) {
   })
 }
 
-describe('rdf-parser-jsond', () => {
+describe('@rdfjs/parser-jsond', () => {
+  sinkTest(JSONLDParser, {readable: true})
+
   it('should support Named Node subjects', () => {
     const example = {
       '@id': 'http://example.org/subject',
