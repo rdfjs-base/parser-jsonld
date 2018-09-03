@@ -114,6 +114,7 @@ describe('@rdfjs/parser-jsond', () => {
     return waitFor(stream).then(() => {
       assert.equal(output.length, 1)
       assert.equal(output[0].object.termType, 'BlankNode')
+      assert(!output[0].object.value.startsWith('_:'))
     })
   })
 
