@@ -25,15 +25,29 @@ The options from the constructor and the `.import` method will be merged togethe
 
 ### Example
 
-This example shows how to create a parser instance and forward the content of a file stream to the parser.
+This example shows how to create a parser instance and how to feed it with a stream from a string.
 The parsed quads are written to the console.
 
 ```
-const fs = require('fs')
 const ParserJsonld = require('@rdfjs/parser-jsonld')
+const Readable = require('stream').Readable
 
 const parserJsonld = new ParserJsonld()
-const input = fs.createReadStream('example.jsonld')
+
+const input = new Readable({
+  read: () => {
+    input.push(`{
+      "@context": "http://schema.org/",
+      "@type": "Person",
+      "name": "Jane Doe",
+      "jobTitle": "Professor",
+      "telephone": "(425) 123-4567",
+      "url": "http://www.janedoe.com"
+    }`)
+    input.push(null)
+  }
+})
+
 const output = parserJsonld.import(input)
 
 output.on('data', quad => {
