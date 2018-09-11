@@ -20,7 +20,7 @@ The constructor accepts the following options:
 - `factory`: Use an alternative RDFJS data factory.
   By default the [reference implementation](https://github.com/rdfjs/data-model/) us used.
 
-It's also possible to pass the options as second argument to the `.import` method.
+It's also possible to pass options as second argument to the `.import` method.
 The options from the constructor and the `.import` method will be merged together.
 
 ### Example
