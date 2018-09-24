@@ -13,7 +13,7 @@ The `.import` method, as defined in the [RDFJS specification](http://rdf.js.org/
 It expects a JSON string stream or a stream which emits a single object.
 The method will return a stream which emits the parsed quads.
 
-The constructor accepts the following options:
+The constructor accepts an `options` object with the following optional keys:
 
 - `baseIRI`: Allows passing the base IRI manually to the `jsonld.js` library.
 - `context`: Allows passing a JSON-LD context manually to the `jsonld.js` library.
