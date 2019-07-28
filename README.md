@@ -18,7 +18,7 @@ The constructor accepts an `options` object with the following optional keys:
 - `baseIRI`: Allows passing the base IRI manually to the `jsonld.js` library.
 - `context`: Allows passing a JSON-LD context manually to the `jsonld.js` library.
 - `factory`: Use an alternative RDFJS data factory.
-  By default the [reference implementation](https://github.com/rdfjs/data-model/) us used.
+  By default the [reference implementation](https://github.com/rdfjs-base/data-model/) us used.
 
 It's also possible to pass options as second argument to the `.import` method.
 The options from the constructor and the `.import` method will be merged together.
