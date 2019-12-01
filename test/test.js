@@ -36,6 +36,48 @@ describe('@rdfjs/parser-jsond', () => {
     })
   })
 
+  it('should support empty Named Node subjects', () => {
+    const example = {
+      '@id': '',
+      'http://example.org/predicate': 'object'
+    }
+
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
+    })
+
+    return waitFor(stream).then(() => {
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].subject.termType, 'NamedNode')
+      assert.strictEqual(output[0].subject.value, '')
+    })
+  })
+
+  it('should support relative Named Node subjects', () => {
+    const example = {
+      '@id': 'relative',
+      'http://example.org/predicate': 'object'
+    }
+
+    const parser = new JSONLDParser()
+    const stream = parser.import(stringToStream(JSON.stringify(example)))
+    const output = []
+
+    stream.on('data', (triple) => {
+      output.push(triple)
+    })
+
+    return waitFor(stream).then(() => {
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].subject.termType, 'NamedNode')
+      assert.strictEqual(output[0].subject.value, 'relative')
+    })
+  })
+
   it('should support Blank Node subjects', () => {
     const example = {
       'http://example.org/predicate': 'object'
