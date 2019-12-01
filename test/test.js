@@ -1,6 +1,5 @@
-/* global describe, it */
-
 const assert = require('assert')
+const { describe, it } = require('mocha')
 const sinkTest = require('@rdfjs/sink/test')
 const stringToStream = require('string-to-stream')
 const JSONLDParser = require('..')
@@ -14,7 +13,7 @@ function waitFor (stream) {
 }
 
 describe('@rdfjs/parser-jsond', () => {
-  sinkTest(JSONLDParser, {readable: true})
+  sinkTest(JSONLDParser, { readable: true })
 
   it('should support Named Node subjects', () => {
     const example = {
@@ -31,9 +30,9 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].subject.termType, 'NamedNode')
-      assert.equal(output[0].subject.value, 'http://example.org/subject')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].subject.termType, 'NamedNode')
+      assert.strictEqual(output[0].subject.value, 'http://example.org/subject')
     })
   })
 
@@ -51,8 +50,8 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].subject.termType, 'BlankNode')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].subject.termType, 'BlankNode')
     })
   })
 
@@ -70,9 +69,9 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].predicate.termType, 'NamedNode')
-      assert.equal(output[0].predicate.value, 'http://example.org/predicate')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].predicate.termType, 'NamedNode')
+      assert.strictEqual(output[0].predicate.value, 'http://example.org/predicate')
     })
   })
 
@@ -92,9 +91,9 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].object.termType, 'NamedNode')
-      assert.equal(output[0].object.value, 'http://example.org/object')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].object.termType, 'NamedNode')
+      assert.strictEqual(output[0].object.value, 'http://example.org/object')
     })
   })
 
@@ -112,16 +111,16 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].object.termType, 'BlankNode')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].object.termType, 'BlankNode')
       assert(!output[0].object.value.startsWith('_:'))
     })
   })
 
   it('should keep Blank Node object mapping', () => {
     const example = {
-      'http://example.org/predicate1': {'@id': '_:b0'},
-      'http://example.org/predicate2': {'@id': '_:b0'}
+      'http://example.org/predicate1': { '@id': '_:b0' },
+      'http://example.org/predicate2': { '@id': '_:b0' }
     }
 
     const parser = new JSONLDParser()
@@ -133,8 +132,8 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 2)
-      assert.equal(output[0].object.equals(output[1].object), true)
+      assert.strictEqual(output.length, 2)
+      assert.strictEqual(output[0].object.equals(output[1].object), true)
     })
   })
 
@@ -154,11 +153,11 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].object.termType, 'Literal')
-      assert.equal(output[0].object.value, 'object')
-      assert.equal(output[0].object.language, '')
-      assert.equal(output[0].object.datatype.value, 'http://www.w3.org/2001/XMLSchema#string')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].object.termType, 'Literal')
+      assert.strictEqual(output[0].object.value, 'object')
+      assert.strictEqual(output[0].object.language, '')
+      assert.strictEqual(output[0].object.datatype.value, 'http://www.w3.org/2001/XMLSchema#string')
     })
   })
 
@@ -179,11 +178,11 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].object.termType, 'Literal')
-      assert.equal(output[0].object.value, 'object')
-      assert.equal(output[0].object.language, 'en')
-      assert.equal(output[0].object.datatype.value, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].object.termType, 'Literal')
+      assert.strictEqual(output[0].object.value, 'object')
+      assert.strictEqual(output[0].object.language, 'en')
+      assert.strictEqual(output[0].object.datatype.value, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString')
     })
   })
 
@@ -204,11 +203,11 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].object.termType, 'Literal')
-      assert.equal(output[0].object.value, 'object')
-      assert.equal(output[0].object.language, '')
-      assert.equal(output[0].object.datatype.value, 'http://example.org/datatype')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].object.termType, 'Literal')
+      assert.strictEqual(output[0].object.value, 'object')
+      assert.strictEqual(output[0].object.language, '')
+      assert.strictEqual(output[0].object.datatype.value, 'http://example.org/datatype')
     })
   })
 
@@ -229,8 +228,8 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(typeof output[0].object.datatype.equals, 'function')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(typeof output[0].object.datatype.equals, 'function')
     })
   })
 
@@ -248,8 +247,8 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].graph.termType, 'DefaultGraph')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].graph.termType, 'DefaultGraph')
     })
   })
 
@@ -270,9 +269,9 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].graph.termType, 'NamedNode')
-      assert.equal(output[0].graph.value, 'http://example.org/graph')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].graph.termType, 'NamedNode')
+      assert.strictEqual(output[0].graph.value, 'http://example.org/graph')
     })
   })
 
@@ -282,7 +281,7 @@ describe('@rdfjs/parser-jsond', () => {
       'http://example.org/predicate': 'object'
     }
 
-    const parser = new JSONLDParser({baseIRI: 'http://example.org/'})
+    const parser = new JSONLDParser({ baseIRI: 'http://example.org/' })
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
@@ -291,16 +290,16 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].subject.termType, 'NamedNode')
-      assert.equal(output[0].subject.value, 'http://example.org/subject')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].subject.termType, 'NamedNode')
+      assert.strictEqual(output[0].subject.value, 'http://example.org/subject')
     })
   })
 
   it('should use context option', () => {
     const example = {
       '@id': 'subject',
-      'predicate': 'object'
+      predicate: 'object'
     }
 
     const context = {
@@ -319,9 +318,9 @@ describe('@rdfjs/parser-jsond', () => {
     })
 
     return waitFor(stream).then(() => {
-      assert.equal(output.length, 1)
-      assert.equal(output[0].subject.termType, 'NamedNode')
-      assert.equal(output[0].subject.value, 'http://example.org/subject')
+      assert.strictEqual(output.length, 1)
+      assert.strictEqual(output[0].subject.termType, 'NamedNode')
+      assert.strictEqual(output[0].subject.value, 'http://example.org/subject')
     })
   })
 
@@ -371,8 +370,8 @@ describe('@rdfjs/parser-jsond', () => {
     stream.resume()
 
     return waitFor(stream).then(() => {
-      assert.equal(prefixes.ex1.value, 'http://example.org/1')
-      assert.equal(prefixes.ex2.value, 'http://example.org/2')
+      assert.strictEqual(prefixes.ex1.value, 'http://example.org/1')
+      assert.strictEqual(prefixes.ex2.value, 'http://example.org/2')
     })
   })
 
@@ -405,7 +404,7 @@ describe('@rdfjs/parser-jsond', () => {
     input.push(null)
 
     return waitFor(stream).then(() => {
-      assert.equal(count, 2) // +1 for waitFor
+      assert.strictEqual(count, 2) // +1 for waitFor
     })
   })
 
@@ -438,7 +437,7 @@ describe('@rdfjs/parser-jsond', () => {
     input.push(null)
 
     return waitFor(stream).then(() => {
-      assert.equal(count, 1)
+      assert.strictEqual(count, 1)
     })
   })
 })

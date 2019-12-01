@@ -26,15 +26,12 @@
     "@rdfjs/data-model": "^1.0.1",
     "@rdfjs/sink": "^1.0.2",
     "concat-stream": "^1.6.2",
-    "jsonld": "^1.0.2",
+    "jsonld": "^1.8.1",
     "readable-stream": "^2.3.6"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
-    "standard": "^11.0.1",
+    "standard": "^14.3.1",
     "string-to-stream": "^1.1.1"
-  },
-  "engines": {
-    "node": ">=6"
   }
 }
