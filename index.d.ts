@@ -1,6 +1,7 @@
 import * as Sink from '@rdfjs/sink';
+import { EventEmitter } from 'events';
 import { Context } from 'jsonld/jsonld-spec';
-import { DataFactory, Quad } from 'rdf-js';
+import { DataFactory, Stream } from 'rdf-js';
 
 interface ParserOptions {
   baseIRI?: string;
@@ -8,8 +9,10 @@ interface ParserOptions {
   factory?: DataFactory;
 }
 
-declare class Parser extends Sink<Quad> {
+declare class Parser extends Sink {
   constructor(options?: ParserOptions);
+
+  import(stream: Stream, options?: ParserOptions): EventEmitter;
 }
 
 export = Parser
