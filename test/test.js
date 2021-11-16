@@ -1,9 +1,9 @@
 const assert = require('assert')
-const { describe, it } = require('mocha')
 const sinkTest = require('@rdfjs/sink/test')
+const { describe, it } = require('mocha')
+const Readable = require('readable-stream')
 const stringToStream = require('string-to-stream')
 const JSONLDParser = require('..')
-const Readable = require('readable-stream')
 
 function waitFor (stream) {
   return new Promise((resolve, reject) => {
@@ -25,7 +25,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -46,7 +46,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -67,7 +67,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -87,7 +87,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -106,7 +106,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -128,7 +128,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -148,7 +148,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -169,7 +169,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -190,7 +190,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -215,7 +215,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -240,7 +240,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -265,7 +265,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -284,7 +284,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -306,7 +306,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -327,7 +327,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
@@ -355,7 +355,7 @@ describe('@rdfjs/parser-jsond', () => {
     const stream = parser.import(stringToStream(JSON.stringify(example)))
     const output = []
 
-    stream.on('data', (triple) => {
+    stream.on('data', triple => {
       output.push(triple)
     })
 
