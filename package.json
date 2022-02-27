@@ -4,7 +4,8 @@
   "description": "JSON-LD parser that implements the RDFJS Sink interface using jsonld.js",
   "main": "index.js",
   "scripts": {
-    "test": "stricter-standard && mocha"
+    "coverage": "codecov",
+    "test": "stricter-standard && c8 --reporter=lcov --reporter=text mocha"
   },
   "repository": {
     "type": "git",
@@ -25,13 +26,13 @@
   "dependencies": {
     "@rdfjs/data-model": "^1.3.4",
     "@rdfjs/sink": "^1.0.3",
-    "concat-stream": "^2.0.0",
-    "jsonld": "^5.2.0",
+    "jsonld-streaming-parser": "^2.4.3",
     "readable-stream": "^3.6.0"
   },
   "devDependencies": {
+    "c8": "^7.11.0",
+    "codecov": "^3.8.3",
     "mocha": "^9.1.3",
-    "stricter-standard": "^0.2.0",
-    "string-to-stream": "^3.0.1"
+    "stricter-standard": "^0.2.0"
   }
 }
