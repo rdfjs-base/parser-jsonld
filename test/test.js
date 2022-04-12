@@ -49,6 +49,10 @@ describe('@rdfjs/parser-jsond', () => {
     strictEqual(output.length, 1)
     strictEqual(output[0].subject.termType, 'NamedNode')
     strictEqual(output[0].subject.value, '')
+    strictEqual(output[0].predicate.termType, 'NamedNode')
+    strictEqual(output[0].predicate.value, 'http://example.org/predicate')
+    strictEqual(output[0].object.termType, 'Literal')
+    strictEqual(output[0].object.value, 'object')
   })
 
   it('should support relative Named Node subjects', async () => {
