@@ -1,23 +1,27 @@
 # @rdfjs/parser-jsonld
-
-[![Build Status](https://travis-ci.org/rdfjs/parser-jsonld.svg?branch=master)](https://travis-ci.org/rdfjs/parser-jsonld)
-
+[![build status](https://img.shields.io/github/workflow/status/rdfjs-base/parser-jsonld/Test)](https://github.com/rdfjs-base/parser-jsonld/actions/workflows/test.yaml)
 [![npm version](https://img.shields.io/npm/v/@rdfjs/parser-jsonld.svg)](https://www.npmjs.com/package/@rdfjs/parser-jsonld)
 
-JSON-LD parser that implements the [RDFJS Sink interface](http://rdf.js.org/) using [jsonld.js](https://github.com/digitalbazaar/jsonld.js).
+JSON-LD parser that implements the [RDF/JS Sink interface](http://rdf.js.org/) using [jsonld-streaming-parser](https://github.com/rubensworks/jsonld-streaming-parser.js).
 
 ## Usage
 
+Use the following command to add the package as a dependency to your project:
+
+```bash
+npm install @rdfjs/data-model --save
+```
+
 The package exports the parser as a class, so an instance must be created before it can be used.
-The `.import` method, as defined in the [RDFJS specification](http://rdf.js.org/#sink-interface), must be called to do the actual parsing.
+The `.import` method, as defined in the [RDF/JS specification](http://rdf.js.org/#sink-interface), must be called to do the actual parsing.
 It expects a JSON string stream or a stream which emits a single object.
 The method will return a stream which emits the parsed quads.
 
 The constructor accepts an `options` object with the following optional keys:
 
-- `baseIRI`: Allows passing the base IRI manually to the `jsonld.js` library.
-- `context`: Allows passing a JSON-LD context manually to the `jsonld.js` library.
-- `factory`: Use an alternative RDFJS data factory.
+- `baseIRI`: Allows passing the base IRI manually to the `jsonld-streaming-parser` library.
+- `context`: Allows passing a JSON-LD context manually to the `jsonld-streaming-parser` library.
+- `factory`: Use an alternative RDF/JS data factory.
   By default the [reference implementation](https://github.com/rdfjs-base/data-model/) us used.
 
 It's also possible to pass options as second argument to the `.import` method.
