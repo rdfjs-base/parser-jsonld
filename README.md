@@ -33,8 +33,8 @@ This example shows how to create a parser instance and how to feed it with a str
 The parsed quads are written to the console.
 
 ```javascript
-const ParserJsonld = require('@rdfjs/parser-jsonld')
-const Readable = require('stream').Readable
+import ParserJsonld from '@rdfjs/parser-jsonld'
+import { Readable } from 'stream'
 
 const parserJsonld = new ParserJsonld()
 
