@@ -4,6 +4,7 @@ import { isReadableStream, isWritableStream } from 'is-stream'
 import { describe, it } from 'mocha'
 import { Readable } from 'readable-stream'
 import chunks from 'stream-chunks/chunks.js'
+import FsDocumentLoader from '../FsDocumentLoader.js'
 import JSONLDParser from '../index.js'
 
 describe('@rdfjs/parser-jsond', () => {
@@ -347,5 +348,26 @@ describe('@rdfjs/parser-jsond', () => {
 
     strictEqual(prefixes.ex1.value, 'http://example.org/1')
     strictEqual(prefixes.ex2.value, 'http://example.org/2')
+  })
+
+  it('should use a given documentLoader', async () => {
+    const example = JSON.stringify({
+      '@context': 'http://example.org/',
+      '@id': 'subject',
+      predicate: 'object'
+    })
+
+    const documentLoader = new FsDocumentLoader({
+      'http://example.org/': 'test/support/example.org.json'
+    })
+
+    const parser = new JSONLDParser({ documentLoader })
+    const stream = parser.import(Readable.from(example))
+
+    const output = await chunks(stream)
+
+    strictEqual(output.length, 1)
+    strictEqual(output[0].predicate.termType, 'NamedNode')
+    strictEqual(output[0].predicate.value, 'http://example.org/predicate')
   })
 })
