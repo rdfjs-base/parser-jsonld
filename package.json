@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/rdfjs-base/parser-jsonld.git"
+    "url": "https://github.com/rdfjs-base/parser-jsonld.git"
   },
   "keywords": [
     "rdf",
@@ -24,18 +24,18 @@
   },
   "homepage": "https://github.com/rdfjs-base/parser-jsonld",
   "dependencies": {
-    "@rdfjs/data-model": "^2.0.1",
-    "@rdfjs/sink": "^2.0.0",
+    "@rdfjs/data-model": "^2.0.2",
+    "@rdfjs/sink": "^2.0.1",
     "duplex-to": "^2.0.0",
-    "jsonld-streaming-parser": "^3.0.0",
-    "readable-stream": "^4.2.0"
+    "jsonld-streaming-parser": "^3.3.0",
+    "readable-stream": "^4.5.2"
   },
   "devDependencies": {
-    "assert": "^2.0.0",
-    "c8": "^7.12.0",
+    "assert": "^2.1.0",
+    "c8": "^9.1.0",
     "is-stream": "^3.0.0",
-    "mocha": "^10.0.0",
+    "mocha": "^10.3.0",
     "stream-chunks": "^1.0.0",
-    "stricter-standard": "^0.2.0"
+    "stricter-standard": "^0.3.0"
   }
 }

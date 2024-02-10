@@ -284,7 +284,7 @@ describe('@rdfjs/parser-jsond', () => {
 
     const parser = new JSONLDParser({
       baseIRI: 'http://example.org/',
-      context: context
+      context
     })
     const stream = parser.import(Readable.from(example))
 

@@ -1,5 +1,5 @@
 # @rdfjs/parser-jsonld
-[![build status](https://img.shields.io/github/workflow/status/rdfjs-base/parser-jsonld/Test)](https://github.com/rdfjs-base/parser-jsonld/actions/workflows/test.yaml)
+[![build status](https://img.shields.io/github/actions/workflow/status/rdfjs-base/parser-jsonld/test.yaml?branch=master)](https://github.com/rdfjs-base/parser-jsonld/actions/workflows/test.yaml)
 [![npm version](https://img.shields.io/npm/v/@rdfjs/parser-jsonld.svg)](https://www.npmjs.com/package/@rdfjs/parser-jsonld)
 
 JSON-LD parser that implements the [RDF/JS Sink interface](http://rdf.js.org/) using [jsonld-streaming-parser](https://github.com/rubensworks/jsonld-streaming-parser.js).
